@@ -1,0 +1,27 @@
+<app-loader></app-loader>
+<div [hidden]="LoaderInterceptor.getLoader">
+    <!-- nav -->
+    <nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="currentUser">
+        <a class="nav-item nav-link" routerLink="/"><i class="fa fa-home fa-2x"></i></a>
+        <div class="navbar-nav ml-auto" style="padding-right: 30px">
+            <a class="nav-item nav-link" routerLink="/cart"><i class="fa fa-shopping-cart fa-2x" aria-hidden="true"></i></a>
+            <a class="nav-item nav-link" routerLink="/admin/dashboard">Admin</a>
+            <a class="nav-item nav-link" routerLink="#" (click)="logout()">Logout</a>
+        </div>
+    </nav>
+
+    <!-- main app container -->
+    <div class="container-full-bg" >
+        <div class="jumbotron jumbotron-fluid" style="background-color: #efefef;">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12" style="vertical-align: middle;">
+                        <router-outlet></router-outlet>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- credits -->
+    <div class="text-center"></div>
+</div>

@@ -1,0 +1,32 @@
+<div class="card col-md-12">
+    <div class="card-body" style="max-height: 403px;overflow: auto;">
+        <form [formGroup]="matrix">
+            <div class="form-group">
+                <label for="discount">Sconto</label>
+                <input type="number" min="0" formControlName="discount" class="form-control" />
+                <div *ngIf="submitted && f.discount.errors" class="alert alert-danger">
+                    <br>
+                    <div *ngIf="f.discount.errors.required">Sconto</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="agent_fee">Provvigione</label>
+                <input type="number" min="0" formControlName="agent_fee" class="form-control" />
+                <div *ngIf="submitted && f.agent_fee.errors" class="alert alert-danger">
+                    <br>
+                    <div *ngIf="f.agent_fee.errors.required">Provvigione</div>
+                </div>
+            </div>
+            <br />
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group text-right">
+            <button type="button" class="mat-raised-button" (click)="close()">Chiudi</button>
+            &nbsp;
+            <button type="button" (click)="onSubmit()" class="btn btn-primary">Aggiungi Matrice</button>
+        </div>
+    </div>
+</div>

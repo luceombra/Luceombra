@@ -1,0 +1,119 @@
+<div *ngIf="user != null" class="main-content">
+	<div class="container-fluid">
+		<mat-card class="example-card col-md-12" style="/*max-height: 570px;*/overflow: auto;">
+			<br />
+			<mat-card-header>
+				<mat-card-title>{{ user.name }}</mat-card-title>
+				<mat-card-subtitle *ngIf="user.role === 'admin' || user.role === 'shop'">{{ user.role | uppercase }}</mat-card-subtitle>
+				<mat-card-subtitle *ngIf="user.role === 'manager'">AGENT</mat-card-subtitle>
+			</mat-card-header>
+			<br />
+			<mat-card-content>
+				<div class="row">
+					<div class="col-md-6 text-center">
+						<div *ngIf="user.role === 'admin'">
+							<img mat-card-image src="{{baseUrl}}{{user.image}}"
+								style="max-width: 250px; max-height: 250px; object-fit: cover;
+"
+								alt="Photo of a Shiba Inu"
+							>
+						</div>
+						<div *ngIf="user.role === 'shop' || user.role === 'manager'">
+							<img mat-card-image src="{{baseUrl}}{{user.image}}"
+								style="max-width: 300px; max-height: 300px;"
+								alt="Photo of a Shiba Inu"
+							>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="row">
+							<div class="col-md-12">
+								<label><b>Email : &nbsp;</b></label><label> {{ user.email }}</label>
+							</div>
+							<div class="col-md-12">
+								<label><b>Telefono : &nbsp;</b></label><label> {{ user.phone_number }}</label>
+							</div>
+							<div *ngIf="user.role == 'admin' || user.role === 'shop'" class="col-md-12">
+								<label><b>IVA (%) : &nbsp;</b></label><label> {{ user.iva }}</label>
+							</div>
+							<div *ngIf="user.role == 'admin' || user.role === 'shop'" class="col-md-12">
+								<label><b>IVA Spedizione (%) : &nbsp;</b></label><label> {{ user.iva_shipping }}</label>
+							</div>
+							<div *ngIf="user.role === 'shop' && shop" class="col-md-12">
+								<label><b>IVA Posa In Opera (%) : &nbsp;</b></label><label> {{ shop.iva_home_service }}</label>
+							</div>
+							<div *ngIf="user.role == 'manager'" class="col-md-12">
+								<label><b>Zona Coperta : &nbsp;</b></label><label> {{ user.zone_covered }}</label>
+							</div>
+							<div *ngIf="user.role == 'shop' && shop" class="col-md-12">
+								<label><b>P.IVA : &nbsp;</b></label><label> {{ shop.iva }}</label>
+							</div>
+							<div *ngIf="user.role != 'shop' && configs" class="col-md-12">
+								<label><b>P.IVA : &nbsp;</b></label><label> {{ configs.p_iva }}</label>
+							</div>
+							<!-- <div *ngIf="user.role == 'shop'" class="col-md-12">
+								<label><b>Markup (%) : &nbsp;</b></label><label> {{ user.commision }}</label>
+							</div> -->
+							<div *ngIf="user.role == 'shop' && shop" class="col-md-12">
+								<label><b>Indirizzo : &nbsp;</b></label><label> {{ shop.address }}</label>
+							</div>
+							<div *ngIf="user.role == 'shop' && shop" class="col-md-12">
+								<label><b>Agente di zona : &nbsp;</b></label><label> {{ shop.name }}</label>
+							</div>
+							<div *ngIf="user.role == 'shop' && shop" class="col-md-12">
+								<label><b>Sconto (%): &nbsp;</b></label><label> {{ shop.discount }}</label>
+							</div>
+							<div *ngIf="user.role == 'manager'" class="col-md-12">
+								<label><b>Commissione non pagata : </b>&nbsp;&nbsp;</label><label> {{ user.unpaidCommision | number : '1.0-2' }}€ </label>
+							</div>
+							<div *ngIf="user.role == 'shop' && shop" class="col-md-12">
+								<label><b>Footer : &nbsp;</b></label>
+								<editor [(ngModel)]="shop.pdfFooter" apiKey="b10in7zi3c434kx38qnbevz81rols6q0uev5jh2jeubt6yyu"
+								[init]="tinyMceSettings"></editor>
+
+								<div class="mt-4">
+									<label for="confirmation_order_note">Conferma d'ordine note</label>
+					                <editor
+					                	[(ngModel)]="shop.confirmation_order_note"
+					                	apiKey="b10in7zi3c434kx38qnbevz81rols6q0uev5jh2jeubt6yyu"
+										[init]="tinyMceSettings"
+									>
+									</editor>
+								</div>
+							</div>
+							<div *ngIf="user.role != 'shop' && configs" class="col-md-12">
+								<label><b>Footer : &nbsp;</b></label>
+								<editor [(ngModel)]="configs.admin_footer" apiKey="b10in7zi3c434kx38qnbevz81rols6q0uev5jh2jeubt6yyu"
+								[init]="tinyMceSettings"></editor>
+
+								<div class="mt-4">
+									<label for="confirmation_order_note">Conferma d'ordine note</label>
+					                <editor
+					                	[(ngModel)]="configs.confirmation_order_note"
+					                	apiKey="b10in7zi3c434kx38qnbevz81rols6q0uev5jh2jeubt6yyu"
+										[init]="tinyMceSettings"
+										>
+									</editor>
+								</div>
+							</div>
+							<div *ngIf="user.role == 'manager'" class="col-md-12 text-right">
+								<br />
+								<label><b>Totale delle commissioni : </b>&nbsp;&nbsp;</label><label class="p-2"
+								style="border: 1px solid black;"> {{ user.total_commision | number : '1.0-2' }}€ </label>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-12 text-right">
+						<br />
+					</div>
+
+					<div class="col-md-12 text-right">
+						<button class="btn btn-primary btn-sm" (click)="updateProfile()" mat-button>Aggiorna Profilo</button>
+						<button class="btn btn-primary btn-sm" (click)="updatePassword()" mat-button>Aggiorna Password</button>
+					</div>
+				</div>
+			</mat-card-content>
+		</mat-card>
+	</div>
+</div>

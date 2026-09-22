@@ -1,0 +1,48 @@
+<h4 mat-dialog-title>Modifica Client
+    <hr />
+</h4>
+<form [formGroup]="clientForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+        <label for="name">Nome : </label>
+        <input type="text" formControlName="name" class="form-control" />
+        <div *ngIf="submitted && validateFunction.name.errors">
+            <br />
+        </div>
+        <div *ngIf="submitted && validateFunction.name.errors">
+            <br>
+            <div *ngIf="validateFunction.name.errors.required" class="alert alert-danger">
+                *Nome non dovrebbe essere vuoto!
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="email">Email : </label>
+        <input type="text" formControlName="email" class="form-control" />
+        <div *ngIf="submitted && validateFunction.email.errors">
+            <br>
+            <div *ngIf="validateFunction.email.errors.required" class="alert alert-danger">
+                *Email non dovrebbe essere vuoto!
+            </div>
+            <div *ngIf="validateFunction.email.errors.email" class="alert alert-danger">
+                *Inserisci una email valida!
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="address">Indirizzo : </label>
+        <input type="text" formControlName="address" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="p_iva">CF/P.IVA </label>
+        <input type="text" formControlName="p_iva" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="phone">Telefono : </label>
+        <input type="text" formControlName="phone" class="form-control" />
+    </div>
+    <br />
+    <div class="text-right">
+        <button type="button" class="mat-raised-button text-center" (click)="close()">Annulla</button>&nbsp;
+        <button type="submit" class="mat-raised-button text-center mat-primary">Salva</button>
+    </div>
+</form>

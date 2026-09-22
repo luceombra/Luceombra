@@ -1,0 +1,81 @@
+<div class="card col-md-12" *ngIf="shop">
+	<div class="card-body" style="max-height: 403px;overflow: auto;">
+		<form [formGroup]="shop">
+
+			<div class="form-group">
+				<label for="name">Nome e Cognome</label>
+				<input type="text" formControlName="name" class="form-control" />
+				<div *ngIf="submitted && f.name.errors" class="alert alert-danger">
+					<br>
+					<div *ngIf="f.name.errors.required">Nome e Cognome sono obbligatorio</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="email">Email</label>
+				<input type="text" formControlName="email" class="form-control" />
+				<div *ngIf="submitted && f.email.errors" class="alert alert-danger">
+					<br>
+					<div *ngIf="f.email.errors.required">Email è obbligatorio</div>
+					<div *ngIf="f.email.errors.email">Il formato dell'email non è corretto</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="iva">IVA</label>
+				<input type="text" formControlName="iva" class="form-control" />
+				<div *ngIf="submitted && f.iva.errors" class="alert alert-danger">
+					<div *ngIf="f.iva.errors.required">IVA è obbligatorio</div>
+				</div>
+			</div>
+
+			<div class="form-group" *ngIf="currentUser.role == 'admin'">
+				<label for="assignee">Assegnato a</label>
+				<mat-form-field>
+					<mat-select formControlName="assignee">
+						<mat-option *ngFor="let assignee of assignees" value="{{assignee.id}}">{{assignee.name}}</mat-option>
+					</mat-select>
+				</mat-form-field>
+			</div>
+
+			<div class="form-group">
+				<label for="address">Indirizzo</label>
+				<input type="text" formControlName="address" class="form-control" />
+			</div>
+
+			<div class="form-group">
+				<label for="phone_number">Telefono</label>
+				<input type="text" formControlName="phone_number" class="form-control" />
+			</div>
+
+			<div class="form-group">
+				<label for="shipping">Spedizione</label>
+				<input type="number" min="0" formControlName="shipping" class="form-control" />
+			</div>
+
+			<div class="form-group" *ngIf="currentUser.role == 'admin' || currentUser.role == 'manager'">
+				<label for="shop_discount">Sconto Rivenditore</label>
+				<mat-form-field>
+					<mat-select formControlName="shop_discount">
+						<mat-option *ngFor="let discount of shopsDiscount" value="{{discount.id}}">{{ discount.discount }} %</mat-option>
+					</mat-select>
+				</mat-form-field>
+			</div>
+
+			<div class="form-group">
+				<label for="description">Descrizione</label>
+				<textarea cols="64" formControlName="description" rows="3"></textarea>
+			</div>
+			<br />
+		</form>
+	</div>
+</div>
+<div class="row" *ngIf="shop">
+	<div class="col-md-12">
+		<div class="form-group text-right">
+			<button type="button" class="mat-raised-button" (click)="close()">Chiudi</button>
+			&nbsp;
+			<button type="button" (click)="onSubmit()" class="btn btn-primary">Aggiorna Negozi</button>
+		</div>
+	</div>
+</div>

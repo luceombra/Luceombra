@@ -1,0 +1,83 @@
+<div class="wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <app-product-legend [productId]=productId [preventiveId]=preventiveId *ngIf="productId && productId != '_NEW'"></app-product-legend>
+            </div>
+            <div class="main col-md-9">
+                <h2>Scegli Accessori</h2>
+                <hr />
+
+                <div *ngIf="!valid" class="alert alert-danger">
+                    Seleziona tutti i dati richiesti
+                </div>
+                <div *ngIf="resp.code == 1" class="alert alert-danger">
+                    {{resp.message}}
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="exampleFormControlSelect1">Scegli Tipo movimento</label>
+                            <mat-form-field>
+                                <mat-select [(ngModel)]="product.motion_id" (selectionChange)="updateValid();"
+                                    id="exampleFormControlSelect1">
+                                    <mat-option disabled selected value="0"> -- seleziona un'opzione -- </mat-option>
+                                    <mat-option *ngFor="let typeMotion of typeMotions" value="{{typeMotion.id}}">{{typeMotion.name}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-md-12" *ngIf="product.motion_id == 2">
+                        <div class="form-group">
+                            <label for="exampleFormControlSelect1">Tipo motore</label>
+                            <mat-form-field>
+                                <mat-select [(ngModel)]="product.motor_id" id="exampleFormControlSelect1"
+                                (selectionChange)="onChangeMotorType();updateValid();updateMotorName();">
+                                <mat-option disabled selected value="0"> -- seleziona un'opzione -- </mat-option>
+                                <mat-option *ngFor="let typeMotor of typeMotors" value="{{typeMotor.id}}">{{typeMotor.name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-md-12" *ngIf="product.motion_id == 1">
+                    <div class="form-group">
+                        <label for="exampleFormControlSelect1">Tipo catena</label>
+                        <mat-form-field>
+                            <mat-select [(ngModel)]="product.chain_id" id="exampleFormControlSelect1"
+                            (selectionChange)="updateValid();updateChainName();">
+                            <mat-option disabled selected value="0"> -- seleziona un'opzione -- </mat-option>
+                            <mat-option *ngFor="let chain of chains" value="{{chain.id}}">{{chain.name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-md-12" *ngIf="product.motion_id == 2">
+                <div class="form-group">
+                    <label for="exampleFormControlSelect1">Tipo telecomando</label>
+                    <mat-form-field>
+                        <mat-select [(ngModel)]="product.telecomand_id" id="exampleFormControlSelect1"
+                        (selectionChange)="updateValid();updateRemoteControlName();">
+                        <mat-option disabled selected value="0"> -- seleziona un'opzione -- </mat-option>
+                        <mat-option *ngFor="let telecomand of telecomands" value="{{telecomand.id}}">{{ telecomand.name }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+    <br />
+    <br />
+    <div class="text-right">
+        <button type="button" (click)="addToCart()" class="btn btn-primary btn-sm">Procedi</button>
+    </div>
+</div>
+<div class="col-md-3">
+    <div class="well">
+        <app-product></app-product>
+    </div>
+</div>
+</div>
+</div>
+</div>

@@ -1,0 +1,35 @@
+<div class="wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <app-product-legend [productId]=productId [preventiveId]=preventiveId *ngIf="productId && productId != '_NEW'"></app-product-legend>
+            </div>
+            <div class="main col-md-9">
+                <h2>Scegli il colore del sistema</h2>
+                <hr />
+                <div class="well">
+                    <div id="content">
+                        <div class="color-div" *ngFor="let color of colors | paginate: { itemsPerPage: 6,
+                            currentPage: p }">{{color.name}}
+                            <a (click)="getMaterials(color.id)">
+                                <div class="color-inside" *ngIf="color.image === '/images/user.jpg' || color.image === ''"
+                                     [ngStyle]="{'background-color': color.value}"></div>
+                                <div class="color-inside" *ngIf="color.image !== '/images/user.jpg' && color.image !== ''">
+                                        <img src="{{baseUrl}}{{color.image}}" style="width:240px;height:240px"/>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div style="font-size:20px" *ngIf="colors.length > 6" class="text-right">
+                    <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="well">
+                    <app-product></app-product>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

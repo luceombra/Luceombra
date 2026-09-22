@@ -1,0 +1,55 @@
+<h4 mat-dialog-title>Processo Ordine
+    <hr />
+</h4>
+<form [formGroup]="adminProcessOrderForm" (ngSubmit)="onSubmit()" style="z-index: 10;">
+    <div class="row">
+        <div class="col-md-12">
+            <div>Stato: </div>
+            <div>
+                <mat-radio-group formControlName="orderState" [(ngModel)]="choosenState">
+                    <mat-radio-button *ngFor="let state of states" [value]="state">
+                        {{ state == 'Confermato' ? 'Confermato' : state }}&nbsp;&nbsp;
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="!submitted || !validateFunction.invoice.errors">
+        <br />
+    </div>
+    <div *ngIf="choosenState === 'Confermato'">
+        <div class="row">
+            <div style="display: inline">
+                <div *ngIf="submitted && validateFunction.invoice.errors">
+                    <div *ngIf="validateFunction.invoice.errors.required" class="alert alert-danger">
+                        *Il numero della conferma d’ordine è obbligatorio!
+                    </div>
+                </div>
+                <div class="col-md-6" style="display: inline">
+                    No. Conferma d’ordine : <input type="text" formControlName="invoice" />
+                </div>
+                <br />
+                <br />
+                <div class="col-md-6" style="display: inline">
+                    Iva % : <input type="number" [(ngModel)]="user.iva" disabled formControlName="iva" min="0" />
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-12">
+                Appunti : <textarea cols="62" formControlName="notes" rows="2"></textarea>
+            </div>
+        </div>
+        <br />
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="text-right">
+                <button type="button" class="mat-raised-button text-center" (click)="close()">Annulla</button>&nbsp;
+                <button type="submit" class="mat-raised-button text-center mat-primary">Salva</button>
+            </div>
+        </div>
+    </div>
+</form>

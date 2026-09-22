@@ -1,0 +1,48 @@
+<div class="card col-md-12">
+    <div class="card-body" style="max-height: 470px;overflow: auto;">
+        <form [formGroup]="client">
+            <div class="form-group">
+                <label for="name">Nome e Cognome</label>
+                <input type="text" formControlName="name" class="form-control" />
+                <div *ngIf="submitted && f.name.errors" class="alert alert-danger">
+                    <br>
+                    <div *ngIf="f.name.errors.required">Nome e Cognome sono obbligatorio</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="text" formControlName="email" class="form-control" />
+                <div *ngIf="submitted && f.email.errors" class="alert alert-danger">
+                    <br>
+                    <div *ngIf="f.email.errors.required">Email è obbligatorio</div>
+                    <div *ngIf="f.email.errors.email">Il formato dell'email non è corretto</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Telefono</label>
+                <input type="text" formControlName="phone" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label for="address">Indirizzo</label>
+                <input type="text" formControlName="address" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="p_iva">CF/P.IVA</label>
+                <input type="text" formControlName="p_iva" class="form-control" />
+            </div>
+            <br />
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group text-right">
+            <button type="button" class="mat-raised-button" (click)="close()">Chiudi</button>
+            &nbsp;
+            <button type="button" (click)="onSubmit()" class="btn btn-primary">Aggiungi Cliente</button>
+        </div>
+    </div>
+</div>

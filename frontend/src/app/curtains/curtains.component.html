@@ -1,0 +1,33 @@
+<div class="wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <app-product-legend [productId]=productId [preventiveId]=preventiveId *ngIf="productId && productId != '_NEW'"></app-product-legend>
+            </div>
+            <div class="main col-md-9">
+                <h2>Scegli il tipo di materiale</h2>
+                <hr />
+                <div class="row">
+                    <a class="col-sm-4" *ngFor="let curtain of curtains | paginate: { itemsPerPage: 6,
+                    currentPage: p }" (click)="getMaterialColors(curtain.id)">
+                    <div class="text-center">
+                        {{curtain.name}}
+                        <br />
+                        <img style="height: 240px;width: 240px" src="{{baseUrl}}{{curtain.image}}" alt="{{curtain.name}}" />
+                        <br />
+                        <br />
+                    </div>
+                </a>
+            </div>
+            <div style="font-size:20px" *ngIf="curtains.length > 6" class="text-right">
+                <pagination-controls (pageChange)="p = $event"></pagination-controls>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="well">
+                <app-product></app-product>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

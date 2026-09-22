@@ -1,0 +1,18 @@
+.color-div {
+    display: inline-block;
+    margin: 3px 1px;
+    text-align: center;
+    font-family: Courier,monospace;
+    padding: 6px;
+    width: 260px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    float: left;
+}
+
+.color-inside {
+    height: 240px;
+    width: 240px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}

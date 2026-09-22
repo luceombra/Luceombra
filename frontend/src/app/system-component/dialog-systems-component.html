@@ -1,0 +1,113 @@
+<h4 mat-dialog-title>Sistemi
+  <hr />
+</h4>
+<form [formGroup]="motorForm" (ngSubmit)="onSubmit()">
+
+  <div class="form-group">
+    <label for="name">Nome : </label>
+    <input type="text" formControlName="name" class="form-control" />
+    <div *ngIf="submitted && validateFunction.name.errors">
+      <br />
+    </div>
+    <div *ngIf="submitted && validateFunction.name.errors">
+      <div *ngIf="validateFunction.name.errors.required" class="alert alert-danger">
+        *Nome non dovrebbe essere vuoto!
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="">
+    <label for="address">Imagini : </label>
+    <div *ngIf="editMode">
+      <img [src]="image" style="max-width:120px" />
+    </div>
+    
+    <input type="file"  (change)="onSelectFile($event)"/>
+  </div>
+ <!--   1 === 2 because Project Manager is changing these part of code very often.-->
+  <!-- <div class="form-group" *ngIf="1 === 2">
+    <label>
+        <input type="checkbox" [checked] ="isChain == false" (change)="checkMotion($event, 'motor')">
+        Motori
+    </label> 
+    <label style="margin-left: 20px;">
+        <input type="checkbox" [checked] ="isChain == true" (change)="checkMotion($event, 'chain')">
+         Chain
+    </label>
+  </div> -->
+
+  <br />
+
+  <nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+      <a class="nav-item nav-link active" id="nav-motors-tab" data-toggle="tab" href="#nav-motors" role="tab" aria-controls="nav-motors" aria-selected="true">Motori</a>
+      <a class="nav-item nav-link" id="nav-chains-tab" data-toggle="tab" href="#nav-chains" role="tab" aria-controls="nav-chains" aria-selected="false">Catena</a>
+	  <a class="nav-item nav-link" id="nav-colors-tab" data-toggle="tab" href="#nav-colors" role="tab" aria-controls="nav-colors" aria-selected="false">Colori</a>
+	</div>
+</nav>
+
+<div class="tab-content" id="nav-tabContent">
+	<div class="tab-pane fade show active" id="nav-motors" role="tabpanel" aria-labelledby="nav-motors-tab">
+
+  <div class="form-group" >
+      <span style="font-size:20px"> Motori</span> <br>
+      <table>
+          <tr *ngFor="let row of rowsMotors">
+            <td *ngFor="let item of row">
+                <input type="checkbox"   [checked] ="item.checked" (change)="checkCheckBoxvalue($event, item.id)">
+                {{item.name}}
+            </td>
+          </tr>
+      </table>
+  </div>
+
+  <br />
+
+  </div>
+
+  <div class="tab-pane fade" id="nav-chains" role="tabpanel" aria-labelledby="nav-chains-tab">
+
+  <div class="form-group">
+      <span style="font-size:20px"> Catena</span> <br>
+      <table>
+          <tr *ngFor="let row of rowsChains">
+            <td *ngFor="let item of row">
+                <input type="checkbox"   [checked] ="item.checked" (change)="checkChain($event, item.id)">
+                {{item.name}}
+            </td>
+          </tr>
+      </table>
+  </div>
+
+  <br />
+
+</div>
+
+<div class="tab-pane fade" id="nav-colors" role="tabpanel" aria-labelledby="nav-colors-tab">
+
+  <div class="form-group" style="font-size:15px">
+      <span style="font-size:20px"> Colori</span> <br>
+      <table style="border-spacing: 1em .5em">
+          <tr *ngFor="let row of rowsColors">
+            <td *ngFor="let item of row">
+                <input type="checkbox"   [checked] ="item.checked" (change)="checkColor($event, item.id)">
+                {{item.name}}
+            </td>
+          </tr>
+      </table>
+  </div>
+
+  <br />
+
+</div>
+
+</div>
+
+  <div class="text-right">
+    <button type="button" class="mat-raised-button text-center" (click)="close()">Annulla</button>&nbsp;
+    <button type="submit" class="mat-raised-button text-center mat-primary">Salva</button>
+  </div>
+
+</form>

@@ -1,0 +1,72 @@
+<div class="col-md-12" >
+  <div class="card">
+    <div class="card-body">
+      <div class="row" *ngIf="product">
+        <div class="col-md-4">
+          <div class="text-center">
+            <img class="card-img-top" style="width: 240px; height: 180px;"
+              src="{{baseUrl}}{{product.systemImage}}" alt="System image">
+            <br />
+            <br />
+            <h5 class="card-title">{{product.system}}</h5>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <h5 class="card-title">Dati</h5>
+          <hr />
+          <label>Larghezza : {{product.width}}cm</label>
+          <br />
+          <label>Altezza : {{product.height}}cm</label>
+          <br />
+          <label>Materiale : {{product.curtain}}</label>
+          <br />
+          <label>Colori di sistemi : {{product.systemColor}}</label>
+          <br />
+          <label>Colori di materiali : {{product.curtainColor}}</label>
+        </div>
+        <div class="col-md-4">
+          <h5 class="card-title">Accessori</h5>
+          <hr />
+          <div *ngIf="product.motor != null">
+            <label>Motore : {{product.motor}}</label>
+            <br />
+          </div>
+          <div *ngIf="product.telecomand != null">
+            <label>Telecomando : {{product.telecomand}}</label>
+            <br />
+          </div>
+          <div *ngIf="product.chain != null">
+            <label>Catena : {{product.chain}}</label>
+            <br />
+          </div>
+          <label>Quantità : </label>&nbsp;<label>{{product.quantity}}</label>
+
+          <br />
+          <br />
+          <div *ngIf="user && user.role != 'shop'; else shops">
+            <b>
+              <label>Prezzo totale : {{product.quantity}} x {{product.totalPrice | number : '1.0-2'}}€ =
+              </label>&nbsp;
+              <label class="p-2"
+                style="border: 1px solid black;">{{(product.quantity * product.totalPrice) | number : '1.0-2'}}€</label>
+            </b>
+          </div>
+          <ng-template #shops>
+            <b>
+              <label>Prezzo totale : {{product.quantity}} x
+<!--                {{ (product.totalPrice * (1 + user.iva / 100) * (1 + commision / 100)) | number : '1.0-2'}}€-->
+                {{ (product.totalPrice * (1 + commision / 100)) | number : '1.0-2'}}€
+                =
+              </label>&nbsp;
+<!--              <label class="p-2"-->
+<!--                     style="border: 1px solid black;">{{(product.quantity * product.totalPrice * (1 + user.iva / 100) * (1 + commision / 100)) | number : '1.0-2'}}€</label>-->
+              <label class="p-2"
+                style="border: 1px solid black;">{{(product.quantity * product.totalPrice * (1 + commision / 100)) | number : '1.0-2'}}€</label>
+            </b>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br />
+</div>

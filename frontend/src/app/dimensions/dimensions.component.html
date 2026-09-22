@@ -1,0 +1,34 @@
+<div class="wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <app-product-legend [productId]=productId [preventiveId]=preventiveId *ngIf="productId && productId != '_NEW'"></app-product-legend>
+            </div>
+            <div class="main col-md-9">
+                <h2>Scegli le dimensioni</h2>
+                <hr />
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Altezza (cm): </label>
+                        <input type="number" min="0" [(ngModel)]="product.height" class="form-control" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Larghezza (cm): </label>
+                        <input type="number" min="0" [(ngModel)]="product.width" class="form-control" />
+                    </div>
+                </div>
+                <br />
+                <br />
+                <div class="text-right">
+                    <button type="button" (click)="goToMotion()" class="btn btn-primary btn-sm">Procedi</button>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="well">
+                    <app-product></app-product>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

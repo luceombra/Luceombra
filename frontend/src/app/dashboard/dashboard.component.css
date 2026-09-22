@@ -1,0 +1,19 @@
+.mat-header-cell, .mat-cell {
+  padding: 0.75rem !important;
+}
+
+.mat-table-sticky:first-child {
+  border-right: 1px solid #e0e0e0;
+}
+
+.mat-table-sticky:last-child {
+  border-left: 1px solid #e0e0e0;
+}
+
+td.mat-column-index, th.mat-column-index {
+  width: 50px;
+}
+
+table {
+  width: 100%
+}

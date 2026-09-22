@@ -1,0 +1,149 @@
+<div class="main-content">
+	<div class="container-fluid">
+		<div class="row" *ngIf="user.role == 'manager'">
+			<div class="col-md-4">
+				<div class="form-group">
+					<mat-form-field>
+						<mat-select [(ngModel)]="selfPreventives" (selectionChange)="reloadTable();">
+							<mat-option selected value="true">Auto Preventivi</mat-option>
+							<mat-option value="false">Negozio Preventivi</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+			</div>
+		</div>
+
+		<div class="row" *ngIf="user.role == 'shop'">
+			<div class="col-md-4">
+				<div class="form-group">
+					<mat-form-field>
+						<mat-select [(ngModel)]="selfPreventives" (selectionChange)="reloadTable();">
+							<mat-option selected value="true">Auto Creato</mat-option>
+							<mat-option value="false">Dal Negozio Principale</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+			</div>
+		</div>
+
+		<mat-form-field>
+			<input matInput (keyup.enter)="applyFilter($event.target.value)" placeholder="Filter">
+		</mat-form-field>
+
+		<div class="table-container mat-elevation-z8">
+			<table (matSortChange)="sortData($event)" class="mat-elevation-z8" style="width:100%" mat-table
+			[dataSource]="dataSource" matSort>
+
+			<ng-container matColumnDef="index" sticky>
+				<th class="small text-center" mat-header-cell *matHeaderCellDef> No. </th>
+				<td class="small text-center" mat-cell *matCellDef="let element; let i = index;">
+				{{this.tableConfigs.pageNumber * this.tableConfigs.pageSize + i + 1}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="view">
+				<th class="small" mat-header-cell *matHeaderCellDef> Vista </th>
+				<td class="small" mat-cell *matCellDef="let row">
+					<button (click)="viewPreventive(row.id)" class="btn btn-primary btn-sm"><i class="fa fa-eye"
+						aria-hidden="true"></i></button>
+					</td>
+			</ng-container>
+			<ng-container matColumnDef="id">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+				<td mat-cell *matCellDef="let row">{{ row.id }}</td>
+			</ng-container>
+			<ng-container matColumnDef="formatedDate">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Data</th>
+				<td mat-cell *matCellDef="let row"> {{row.formatedDate}} </td>
+			</ng-container>
+			<ng-container matColumnDef="status">
+				<div *ngIf="user.role == 'shop';else notAdmin">
+					<th class="large text-center" mat-header-cell *matHeaderCellDef mat-sort-header> Stato </th>
+					<td class="large text-center" mat-cell *matCellDef="let row">
+						<button style="min-width: 125px;" (click)="changeStatus(row.id, row.status, row.discountId)"
+							class="btn btn-success btn-sm">{{row.status}}
+						</button>
+					</td>
+				</div>
+				<ng-template #notAdmin>
+					<th mat-header-cell *matHeaderCellDef mat-sort-header> Stato </th>
+					<td mat-cell *matCellDef="let row"> {{row.status}} </td>
+				</ng-template>
+			</ng-container>
+
+			<!-- Name Column -->
+			<ng-container matColumnDef="from">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Da </th>
+				<td mat-cell *matCellDef="let row"> {{ row.from }} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="download">
+				<th class="small" mat-header-cell *matHeaderCellDef>PDF</th>
+				<td class="small" mat-cell *matCellDef="let row">
+					<a href="{{ baseUrl + row.pdf }}" class="btn btn-default btn-sm" target="_blank">
+						<i class="fa fa-download" aria-hidden="true"></i>
+					</a>
+				</td>
+			</ng-container>
+				<ng-container matColumnDef="client">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
+					<td mat-cell *matCellDef="let row">{{ row.client }}</td>
+				</ng-container>
+
+				<ng-container matColumnDef="amount">
+					<th class="large" mat-header-cell *matHeaderCellDef mat-sort-header>
+					{{ user.role != "shop" ? "Prezzo Totale (€) " : "Costi (€) " }} </th>
+					<td class="large" mat-cell *matCellDef="let row">{{ row.amount | number : '1.0-2'}}</td>
+				</ng-container>
+
+				<ng-container matColumnDef="shipping">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header> Spedizione (€) </th>
+					<td mat-cell *matCellDef="let row"> {{row.shipping | number : '1.0-2'}} </td>
+				</ng-container>
+
+				<ng-container matColumnDef="service_on_home">
+					<th class="large" mat-header-cell *matHeaderCellDef mat-sort-header> Servizio a casa (€) </th>
+					<td class="large" mat-cell *matCellDef="let row"> {{row.service_on_home | number : '1.0-2'}} </td>
+				</ng-container>
+
+				<ng-container matColumnDef="discount">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header> Sconto Principale (%) </th>
+					<td mat-cell *matCellDef="let row"> {{row.discount | number : '1.0-2'}} </td>
+				</ng-container>
+
+				<ng-container matColumnDef="shopDiscount">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header> Negozio Sconto (%) </th>
+					<td mat-cell *matCellDef="let row"> {{row.shopDiscount | number : '1.0-2'}} </td>
+				</ng-container>
+
+				<ng-container matColumnDef="totalAmount">
+					<th class="large" mat-header-cell *matHeaderCellDef mat-sort-header> Prezzo Totale (€) </th>
+					<td class="large" mat-cell *matCellDef="let row"> {{row.totalAmount | number : '1.0-2'}} </td>
+				</ng-container>
+
+				<ng-container matColumnDef="commision">
+					<th class="large" mat-header-cell *matHeaderCellDef mat-sort-header> Commissione (€) </th>
+					<td class="large" mat-cell *matCellDef="let row"> {{row.commision | number : '1.0-2'}} </td>
+				</ng-container>
+
+				<ng-container matColumnDef="actions" stickyEnd>
+					<th class="large text-center" mat-header-cell *matHeaderCellDef> Azioni </th>
+					<td class="large text-center" mat-cell *matCellDef="let row">
+						<!--            *ngIf="user.role != 'shop'  || (user.role == 'shop' && selfPreventives != 'false')"-->
+						<button (click)="changePreventive(row.id)" class="btn btn-success btn-sm">
+							<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+						</button>
+						<button (click)="deletePreventive(row.id)" class="btn btn-danger btn-sm"><i class="fa fa-trash"
+							aria-hidden="true"></i></button>
+						</td>
+					</ng-container>
+
+					<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+					<tr mat-row *matRowDef="let row; columns: displayedColumns;let i = index">
+					</tr>
+				</table>
+			</div>
+			<mat-paginator [length]="totalCount" [pageIndex]="this.tableConfigs.pageNumber"
+				[pageSize]="this.tableConfigs.pageSize" (page)="getPaginatorData($event)" [pageSizeOptions]="[5, 10, 25, 100]">
+			</mat-paginator>
+	</div>
+</div>

@@ -1,0 +1,91 @@
+<div class="main-content">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-12 text-right">
+				<button (click)="addAgent()" class="btn btn-primary btn-sm">
+					Aggiungi Agenti
+				</button>
+				<a href="#/admin/agent-matrices" class="btn btn-default btn-sm">
+					Matrice
+				</a>
+			</div>
+		</div>
+		<mat-form-field>
+			<input matInput (keyup.enter)="applyFilter($event.target.value)" placeholder="Filter">
+		</mat-form-field>
+
+		<div class="table-container mat-elevation-z8">
+			<table (matSortChange)="sortData($event)" class="mat-elevation-z8" style="width:100%" mat-table
+			[dataSource]="dataSource" matSort>
+			<ng-container matColumnDef="index" sticky>
+				<th class="text-center" mat-header-cell *matHeaderCellDef> No. </th>
+				<td class="text-center" mat-cell *matCellDef="let element; let i = index;">
+				{{this.tableConfigs.pageNumber * this.tableConfigs.pageSize + i + 1}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="image">
+				<th mat-header-cell *matHeaderCellDef> Immagine </th>
+				<td mat-cell *matCellDef="let row">
+					<img style="width: 35px;height: 35px;" src="{{baseUrl}}{{row.image}}" alt="Avatar" />
+				</td>
+			</ng-container>
+
+			<ng-container matColumnDef="name">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
+				<td mat-cell *matCellDef="let row"> {{row.name}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="email">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
+				<td mat-cell *matCellDef="let row"> {{row.email}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="phone_number">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Telefono </th>
+				<td mat-cell *matCellDef="let row"> {{row.phone_number}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="zone_covered">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Zona Coperta </th>
+				<td mat-cell *matCellDef="let row"> {{row.zone_covered}} </td>
+			</ng-container>
+
+<!-- 			<ng-container matColumnDef="commision">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Commissione (%) </th>
+				<td mat-cell *matCellDef="let row"> {{row.commision}} </td>
+			</ng-container> -->
+
+			<ng-container matColumnDef="unpaidCommision">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Commissione non pagata </th>
+				<td mat-cell *matCellDef="let row"> {{row.unpaidCommision | number : '1.0-2'}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="total_commision">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Commissione Totale </th>
+				<td mat-cell *matCellDef="let row"> {{row.total_commision | number : '1.0-2'}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="actions" stickyEnd>
+				<th class="text-center" mat-header-cell *matHeaderCellDef> Azioni </th>
+				<td class="text-center" mat-cell *matCellDef="let row">
+					<a href="#/admin/orders/{{ row.id }}" class="btn btn-default btn-sm">
+						Verifica Ordine
+					</a>
+					<button (click)="updateAgent(row)" class="btn btn-success btn-sm">
+						<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+					</button>
+					<button (click)="deleteAgent(row.id)" class="btn btn-danger btn-sm">
+						<i class="fa fa-trash" aria-hidden="true"></i>
+					</button>
+				</td>
+			</ng-container>
+
+			<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+			<tr mat-row *matRowDef="let row; columns: displayedColumns;let i = index"></tr>
+		</table>
+	</div>
+	<mat-paginator [length]="totalCount" [pageIndex]="this.tableConfigs.pageNumber"
+	[pageSize]="this.tableConfigs.pageSize" (page)="getPaginatorData($event)" [pageSizeOptions]="[5, 10, 25, 100]">
+</mat-paginator>
+</div>
+</div>

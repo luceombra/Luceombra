@@ -1,0 +1,53 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 text-right">
+                <button class="btn btn-primary btn-sm" (click)="openDialog()">Inserisci</button>
+            </div>
+        </div>
+        <mat-form-field>
+            <input matInput (keyup.enter)="applyFilter($event.target.value)" placeholder="Filter">
+        </mat-form-field>
+        <div class="mat-elevation-z8">
+            <table (matSortChange)="sortData($event)" style="width:100%" mat-table
+            [dataSource]="dataSource" matSort>
+
+            <ng-container matColumnDef="index" sticky>
+                <th class="text-center" mat-header-cell *matHeaderCellDef> No. </th>
+                <td class="text-center" mat-cell *matCellDef="let element; let i = index;">
+                {{this.tableConfigs.pageNumber * this.tableConfigs.pageSize + i + 1}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef> Nome </th>
+                <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="image">
+                <th class="text-center" mat-header-cell *matHeaderCellDef mat-sort-header> Imagi </th>
+                <td mat-cell *matCellDef="let row"> <img src="{{baseUrl}}{{row.image}}" style="width:50px;height:50px" />
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions" stickyEnd>
+                <th class="text-center" mat-header-cell *matHeaderCellDef> Azioni </th>
+                <td class="text-center" mat-cell *matCellDef="let row">
+                    <button (click)="updateMotor(row)" class="btn btn-success btn-sm">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    </button>
+                    <button *ngIf="user.role != 'manager'" (click)="deleteSystem(row.id)" class="btn btn-danger btn-sm"><i
+                        class="fa fa-trash" aria-hidden="true"></i></button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;let i = index">
+                </tr>
+            </table>
+
+            <mat-paginator [length]="totalCount" [pageIndex]="this.tableConfigs.pageNumber"
+            [pageSize]="this.tableConfigs.pageSize" (page)="getPaginatorData($event)" [pageSizeOptions]="[5, 10, 25, 100]">
+        </mat-paginator>
+    </div>
+</div>
+</div>

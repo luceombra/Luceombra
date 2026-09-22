@@ -1,0 +1,137 @@
+<h4 mat-dialog-title>Sistemi
+    <hr />
+</h4>
+<div *ngIf="editMode">
+     <mat-form-field>
+        <input matInput (keyup.enter)="applyFilterOnMatrix($event.target.value)" placeholder="Cerca">
+    </mat-form-field>
+</div>
+<form (ngSubmit)="onSubmit()">
+    <div class="form-group">
+        <label for="name">Sistemi :</label>
+        <mat-form-field>
+            <mat-select  [value]="system" [disabled] = "editMode" id="exampleFormControlSelect1" (selectionChange)="changeValue('system', $event.value)">
+                <mat-option disabled selected value="0"> -- seleziona un'opzione -- </mat-option>
+                <mat-option *ngFor="let system of allSystems" value="{{system.id}}">{{system.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="form-group">
+        <label for="name">Tipo di prezzo :</label>
+        <mat-form-field>
+            <mat-select [value]="type" [disabled] = "editMode"  id="exampleFormControlSelect1" (selectionChange)="changeValue('type', $event.value)">
+                <mat-option disabled  value="0"> -- seleziona un'opzione -- </mat-option>
+                <mat-option *ngFor="let line of types" value="{{line.id}}">{{line.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div *ngIf="type == '1'">
+         <label *ngIf="editMode" for="markup">Last Markup: {{ markupFromDb.amount ? markupFromDb.amount : 0 }} %</label>
+        <div class="row">
+            <div class="col-sm" style="margin-top: 13px;">
+                <button type="button" (click)="fileInput.click()">
+                    <span id="fileName">Carica File Excel</span>
+                    <input #fileInput type="file" (change)="onFileChange($event)" style="display:none;" />
+                </button>
+            </div>
+            <div class="col-sm-3">
+                <mat-form-field>
+                    <mat-label>Markup (%)</mat-label>
+                    <input type="number" class="text-center" matInput (input) = "getMarkup($event)">
+                </mat-form-field>
+                <!-- <input style="display: inline" min="0" type="number" class="text-center form-control col-md-12" /> -->
+            </div>
+            <div class="col-sm text-center" style="margin: 13px 6px 0 0;">
+                <button type="button" class="mat-raised-button text-center" (click)="uploadOrMarkup()">Salva</button>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="name" *ngIf="type == '2' || type == '1'">Prezzo: </label>
+        <div class="form-group" *ngIf="type == '3'">
+            <label for="email">Prezzo (€):</label>
+            <input type="number" [value] = "price" class="form-control" (input) = "changeName($event)"/>
+        </div>
+        <div class="col-md-12" *ngIf="type == '2' || type == '1'">
+            <div class="col-md-3" style="float:left">
+                <label for="email">
+                    <div *ngIf = "showMatrix === true">{{type =='2' ? 'Mix M2' :'Width'}}:</div>
+                    <div *ngIf = "showMatrix !== true">Min M2:</div>
+                </label>
+                <input type="number" [value] = "min" class="form-control" (input) = "changeValues('min', $event)"/>
+            </div>
+            <div class="col-md-3" style="float:left">
+                <label for="email"><div *ngIf = "showMatrix === true">{{type =='2' ? 'Max M2' :'Height'}}:  </div> <div *ngIf = "showMatrix !== true">Max M2:</div> </label>
+                <input type="number" id="file-upload" [value] = "max" class="form-control" (input) = "changeValues('max', $event)"/>
+            </div>
+            <div class="col-md-3" style="float:left">
+                <label for="email">Prezzo (€): </label>
+                <input type="number" [value] = "defaultPrice" class="form-control" (input) = "changeValues('price', $event)"/>
+            </div>
+            <div class="col-md-3" style="float:left">
+                <button type="button" class="mat-raised-button text-center" (click)="addNew()">Salva</button>&nbsp;
+            </div>
+        </div>
+    </div>
+
+    <table class="mat-elevation-z8" style="width:100%" mat-table
+    [dataSource]="dataSource" matSort *ngIf="type == '2' || type == '1'">
+    <ng-container matColumnDef="min">
+        <th mat-header-cell *matHeaderCellDef> <div *ngIf = "showMatrix === true">Width </div> <div *ngIf = "showMatrix !== true">Min</div> </th>
+        <td mat-cell *matCellDef="let row"> {{row.min}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="max">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> <div *ngIf = "showMatrix === true">Height </div> <div *ngIf = "showMatrix !== true">Max</div> </th>
+        <td mat-cell *matCellDef="let row"> {{row.max}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Prezzo</th>
+        <td mat-cell *matCellDef="let row"> {{row.price}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Azioni </th>
+        <td mat-cell *matCellDef="let row">
+            <button type="button" (click)="updateMotor(row)" class="btn btn-success btn-sm">
+                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+            </button>
+            <!-- <button type="button" class="mat-raised-button text-center btn btn-danger btn-sm" (click)="deleteRow(row.id)">Salva</button>&nbsp; -->
+            <button (click)="deleteRow(row.id, row.rand, $event)" class="btn btn-danger btn-sm">
+                <i class="fa fa-trash" aria-hidden="true"></i>
+            </button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;let i = index">
+        </tr>
+    </table>
+    <div  *ngIf="type == '2' || type == '3'">
+        <label for="name">Min & Max: </label>
+        <div class="col-md-12" >
+            <div class="col-md-3 float-left">
+                <label for="email"> <div *ngIf = "showMatrix === true">Min Width: </div> <div *ngIf = "showMatrix !== true">Min Width:</div> </label>
+                <input type="number" [value] = "minWidth" class="form-control" (input) = "changeLimitValues('minWidth',$event)"/>
+            </div>
+            <div class="col-md-3 float-left">
+                <label for="email"><div *ngIf = "showMatrix === true">Max Width </div> <div *ngIf = "showMatrix !== true">Max Width:</div> </label>
+                <input type="number" [value] = "maxWidth" class="form-control" (input) = "changeLimitValues('maxWidth', $event)"/>
+            </div>
+
+            <div class="col-md-3" style="float:left">
+                <label for="email"> <div *ngIf = "showMatrix === true">Min Height: </div> <div *ngIf = "showMatrix !== true">Min Height:</div> </label>
+                <input type="number" [value] = "minHeight" class="form-control" (input) = "changeLimitValues('minHeight',$event)"/>
+            </div>
+            <div class="col-md-3" style="float:left">
+                <label for="email"><div *ngIf = "showMatrix === true">Max Height </div> <div *ngIf = "showMatrix !== true">Max Height:</div> </label>
+                <input type="number" [value] = "maxHeight" class="form-control" (input) = "changeLimitValues('maxHeight', $event)"/>
+            </div>
+        </div>
+    </div>
+    <div class="text-right mt-4">
+        <button type="button" class="mat-raised-button text-center" (click)="close()">Annulla</button>&nbsp;
+        <button type="submit" class="mat-raised-button text-center mat-primary">Salva</button>
+    </div>
+</form>

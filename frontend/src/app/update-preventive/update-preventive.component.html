@@ -1,0 +1,184 @@
+<div class="row" *ngIf="preventiveForm">
+	<div class="col-md-12">
+		<h4>Aggiungere preventivo</h4>
+	</div>
+</div>
+<form *ngIf="preventiveForm" [formGroup]="preventiveForm" (ngSubmit)="onSubmit()">
+	<div class="card">
+		<div class="card-body">
+			<div class="row">
+				<div class="col-md-12">
+					<div *ngIf="available">
+						<div *ngIf="user && user.role == 'shop'; else shops">
+							<label>Seleziona il client per la prevenzione : </label>
+						</div>
+						<ng-template #shops>
+							<label>Seleziona il negozio per la prevenzione : </label>
+						</ng-template>
+
+				<!-- 		<mat-form-field *ngIf="clients && clients.length > 0">
+								<mat-select [(ngModel)]="shopOrClient" [ngModelOptions]="{standalone: true}" (selectionChange)="[changeDiscount($event), [preventive.shipping=shopOrClient.shipping, preventive.discount=shopOrClient.discount]]">
+									<mat-option disabled selected value="0"> -- seleziona un'opzione -- </mat-option>
+									<mat-option *ngFor="let client of clients" [value]="client">
+										{{client.name }}
+									</mat-option>
+								</mat-select>
+							</mat-form-field> -->
+
+						<mat-form-field *ngIf="clients && clients.length > 0;else dumpSelect">
+							<mat-select formControlName="assigned" (selectionChange)="updateShipping($event)">
+								<mat-option disabled selected value="0"> -- seleziona un'opzione -- </mat-option>
+								<mat-option *ngFor="let client of clients" [value]="client.id">
+									{{client.name}}
+								</mat-option>
+							</mat-select>
+						</mat-form-field>
+						<ng-template #dumpSelect>
+							<mat-form-field>
+								<mat-select [(value)]="assignedId">
+									<mat-option [value]="assignedId">{{ fullName }} </mat-option>
+								</mat-select>
+							</mat-form-field>
+						</ng-template>
+					</div>
+				</div>
+				<table class="col-md-12">
+					<tr *ngIf="user.role != 'shop';">
+						<td class="col-md-6">Sconto Rivenditore (%) :</td>
+						<td class="col-md-6 text-right">
+							<div class="form-group" *ngIf="user.role != 'shop';else enableSconto">
+								<mat-form-field style="width:130px;">
+									<mat-select [(ngModel)]="discountMatrix" formControlName="discount">
+										<mat-option *ngFor="let discount of discountsOfShop" [value]="discount"
+										>
+										{{ discount.discount }} %
+									</mat-option>
+								</mat-select>
+							</mat-form-field>
+						</div>
+<!-- <input *ngIf="user.role != 'shop';else enableSconto" min="0" formControlName="discount" type="number"
+(change)="!(preventiveForm.value.discount > 0 && preventiveForm.value.discount < 100) ? preventiveForm.patchValue({discount: 0}) : ''"
+class="text-center input-field form-control" />
+<ng-template #enableSconto>
+<input min="0" formControlName="shopDiscount" type="number"
+(change)="!(preventiveForm.value.shopDiscount > 0 && preventiveForm.value.shopDiscount < 100) ? preventiveForm.patchValue({shopDiscount: 0}) : ''"
+class="text-center input-field form-control" />
+</ng-template>
+<input *ngIf="user.role != 'shop' && assignedType == 'client';else enableSconto" disabled min="0" formControlName="discount" type="number" class="text-center input-field form-control" />-->
+<!--                    <ng-template #enableSconto>-->
+	<!--                        <input min="0" formControlName="discount" type="number" -->
+	<!--                        (change)="!(preventiveForm.value.discount > 0 && preventiveForm.value.discount < 100) ? preventiveForm.patchValue({discount: 0}) : ''"-->
+	<!--                        class="text-center input-field form-control" />-->
+	<!--                    </ng-template>                  -->
+</td>
+</tr>
+<input min="0" type="hidden" formControlName="discountWhenUserIsShop" />
+<tr>
+	<td class="col-md-6">IVA (%) :</td>
+	<td class="col-md-6 text-right">
+		<input min="0" type="number" formControlName="iva" class="text-center input-field form-control" />
+		<input min="0" type="hidden" formControlName="discountId" />
+	</td>
+</tr>
+<tr>
+	<td class="col-md-6">Spedizione (€) :</td>
+	<td class="col-md-6 text-right">
+		<input type="number" formControlName="shipping" min="0" class="text-center input-field form-control" />
+		<!--                  <input *ngIf="user.role != 'shop' && assignedType == 'client';else enableShipping" disabled type="number" formControlName="shipping" min="0" class="text-center input-field form-control" />-->
+		<!--                  <ng-template #enableShipping>-->
+			<!--                    <input type="number" formControlName="shipping" min="0" class="text-center input-field form-control" />-->
+			<!--                  </ng-template>               -->
+		</td>
+</tr>
+
+<tr>
+	<td class="col-md-6">Iva Spedizione (%) :</td>
+	<td class="col-md-6 text-right">
+		<input type="number" formControlName="iva_shipping" min="0" class="text-center input-field form-control" />
+		<!--                  <input *ngIf="user.role != 'shop' && assignedType == 'client';else enableShipping" disabled type="number" formControlName="shipping" min="0" class="text-center input-field form-control" />-->
+		<!--                  <ng-template #enableShipping>-->
+			<!--                    <input type="number" formControlName="shipping" min="0" class="text-center input-field form-control" />-->
+			<!--                  </ng-template>               -->
+		</td>
+</tr>
+	<!-- !available || user.role == 'shop' -->
+	<tr *ngIf="user.role == 'shop'">
+		<td class="col-md-6">Posa in opera (€) :</td>
+		<td class="col-md-6 text-right">
+<!-- <input *ngIf="user.role != 'shop' && assignedType == 'client';else enablePosa" disabled min="0" type="number" formControlName="service_on_home" class="text-center input-field form-control" />
+	<ng-template #enablePosa> -->
+		<input min="0" type="number" formControlName="service_on_home" class="text-center input-field form-control" />
+		<!-- </ng-template> -->
+	</td>
+</tr>
+	<tr *ngIf="user.role == 'shop'">
+		<td class="col-md-6">Iva posa in opera (€) :</td>
+		<td class="col-md-6 text-right">
+<!-- <input *ngIf="user.role != 'shop' && assignedType == 'client';else enablePosa" disabled min="0" type="number" formControlName="service_on_home" class="text-center input-field form-control" />
+	<ng-template #enablePosa> -->
+		<input min="0" type="number" formControlName="iva_home_service" class="text-center input-field form-control" />
+		<!-- </ng-template> -->
+	</td>
+</tr>
+<tr *ngIf="user.role == 'shop'">
+	<td class="col-md-6">Ricarico (%) :</td>
+	<td class="col-md-6 text-right">
+		<input min="0" max="100" type="number" formControlName="markup" class="text-center input-field form-control"
+		(change)="!(preventiveForm.value.markup > 0 && preventiveForm.value.markup < 100) ? preventiveForm.patchValue({markup: 0}) : ''" />
+	</td>
+</tr>
+<tr>
+	<td class="col-md-2">Riferimento :</td>
+	<td class="col-md-10">
+		<input style="width: 194%; margin-left: -128px;" type="text" formControlName="reference" class="input-field form-control"/>
+		<!--                  <input *ngIf="user.role != 'shop' && assignedType == 'client';else enableShipping" disabled type="number" formControlName="shipping" min="0" class="text-center input-field form-control" />-->
+		<!--                  <ng-template #enableShipping>-->
+			<!--                    <input type="number" formControlName="shipping" min="0" class="text-center input-field form-control" />-->
+			<!--                  </ng-template>               -->
+	</td>
+</tr>
+<br>
+<br>
+<tr *ngIf="user.role == 'shop';else calculateAdmin">
+	<td class="col-md-6">Totale del preventivo :</td>
+	<td class="col-md-6 text-right">
+		<label class="px-4 py-1 text-right" style="border: 1px solid black;">
+			<!--                        {{((preventive.amount * (1 + user.iva  / 100) * (1 + preventiveForm.value.markup / 100) * (1 - preventiveForm.value.discount / 100)  * (1 + user.iva / 100) + preventiveForm.value.shipping  * (1 + user.iva  / 100) + preventiveForm.value.service_on_home) | number : '1.0-2')}}€-->
+
+			<!-- {{(((preventive.amount * (1 + preventiveForm.value.markup / 100) * (1 - preventiveForm.value.discount / 100) * (1 - preventiveForm.value.shopDiscount / 100) + preventiveForm.value.shipping)  * (1 + user.iva  / 100) + preventiveForm.value.service_on_home) | number : '1.0-2')}}€ -->
+
+
+		<!-- 	((preventive.amount * (1 + preventive.markup / 100) * (1 - preventive.discount / 100) * (1 + preventive.iva / 100)
+			+ preventive.shipping * (1 + preventive.iva_shipping / 100) + preventive.service_on_home * (1 + preventive.iva_home_service / 100) -->
+
+			{{(((preventive.amount * (1 + preventiveForm.value.markup / 100) * (1 - preventive.discount / 100) * (1 + preventiveForm.value.iva  / 100) + preventiveForm.value.shipping * (1 + preventiveForm.value.iva_shipping  / 100) + preventiveForm.value.service_on_home * (1 + preventiveForm.value.iva_home_service / 100) )) | number : '1.0-2')}} €
+
+			<!-- {{(((preventive.amount * (1 - preventiveForm.value.discountWhenUserIsShop / 100) * (1 + preventiveForm.value.markup / 100) * (1 + user.iva  / 100) + preventiveForm.value.shipping * (1 + preventiveForm.value.iva_shipping  / 100) + preventiveForm.value.service_on_home * (1 + preventiveForm.value.iva_home_service  / 100))) | number : '1.0-2')}} € -->
+		</label>
+	</td>
+</tr>
+
+<ng-template #calculateAdmin>
+	<tr>
+		<td class="col-md-6">Totale del preventivo :</td>
+		<td class="col-md-6 text-right">
+			<label class="px-4 py-1 text-right" style="border: 1px solid black;">
+				{{((preventive.amount * (1 - preventiveForm.value.discount?.discount / 100) * (1 + user.iva / 100) + preventiveForm.value.shipping * (1 + preventiveForm.value.iva_shipping  / 100)) | number : '1.0-2')}}€
+			</label>
+		</td>
+	</tr>
+</ng-template>
+</table>
+</div>
+</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<div class="form-group text-right">
+			<button type="button" class="mat-raised-button" (click)="close()">Chiudi</button>
+			&nbsp;
+			<button type="button" (click)="onSubmit()" [disabled]="available && !preventiveForm.value.assigned" class="btn btn-primary">Aggiorna Preventivo</button>
+		</div>
+	</div>
+</div>
+</form>

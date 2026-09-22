@@ -1,0 +1,29 @@
+<nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top" style="z-index:0;">
+    <div class="container-fluid">
+        <div class="navbar-wrapper">
+            <label><b><h3>{{ setTitle() }}</h3></b></label>
+        </div>
+        <button mat-raised-button class="navbar-toggler" type="button" (click)="sidebarToggle()">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="navbar-toggler-icon icon-bar"></span>
+            <span class="navbar-toggler-icon icon-bar"></span>
+            <span class="navbar-toggler-icon icon-bar"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navigation">
+
+            <ul class="navbar-nav">
+                <li class="nav-item" title="Crea preventivo">
+                    <a class="nav-link" routerLink="#">
+                        <i class="material-icons">dashboard</i>
+                    </a>
+                </li>
+
+                <li class="nav-item" title="Profilo">
+                    <a class="nav-link" routerLink="/admin/profile">
+                        <i class="material-icons">person</i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

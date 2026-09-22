@@ -1,0 +1,178 @@
+<div class="wrapper">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h2>Aggiungere preventivo</h2>
+				<hr />
+			</div>
+		</div>
+		<div class="card">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-md-6">
+						<div *ngIf="user && user.role == 'shop'; else shops">
+							<label>Seleziona il client per la prevenzione:</label>
+						</div>
+						<ng-template #shops>
+							<label>Seleziona il negozio per la preventivazione:</label>
+						</ng-template>
+						<mat-form-field *ngIf="clients && clients.length > 0">
+							<mat-select [(ngModel)]="shopOrClient" (selectionChange)="[changeDiscount($event), [preventive.shipping=shopOrClient.shipping, preventive.discount=shopOrClient.discount]]">
+								<mat-option disabled selected value="0"> -- seleziona un'opzione -- </mat-option>
+								<mat-option *ngFor="let client of clients" [value]="client">
+									{{client.name }}
+								</mat-option>
+							</mat-select>
+						</mat-form-field>
+					</div>
+					<div class="col-md-6">
+						<div *ngIf="user.role == 'shop';else shopButton">
+							<div class="text-right">
+								<br />
+								<button type="button" (click)="addClient()" class="btn btn-primary btn-sm">Aggiungi Cliente</button>
+							</div>
+						</div>
+
+						<ng-template #shopButton>
+							<div class="text-right">
+								<br />
+								<button type="button" (click)="addShop()" class="btn btn-primary btn-sm">Aggiungi Negozio</button>
+							</div>
+						</ng-template>
+					</div>
+					<div class="col-md-6">
+						<div>
+							<br />
+							<div *ngIf="user.role == 'admin' || user.role === 'manager'">
+								<label>Sconto (%) :</label>
+								<mat-form-field *ngIf="matrices && matrices.length > 0" style="display:  inline-block! important; margin-left: 286px; width: 130px;">
+
+									<mat-select [(ngModel)]="discountMatrix" (selectionChange)="preventive.discount=discountMatrix.discount" required>
+										<mat-option disabled selected> -- sconto rivenditore -- </mat-option>
+										<mat-option *ngFor="let matrix of matrices" [value]="matrix">
+											<!-- Sconto: --> {{ matrix.discount }} % <!-- &nbsp;&nbsp; -> &nbsp;&nbsp; Provvigione {{ matrix.agent_fee }} % -->
+										</mat-option>
+									</mat-select>
+								</mat-form-field>
+								<!-- <div *ngIf="shopOrClient && matrices && matrices.length > 0">
+									<mat-form-field style="display:  inline-block! important; margin-left: 286px; width: 130px;">
+										<mat-select [(ngModel)]="discountMatrix" (selectionChange)="preventive.discount=discountMatrix.discount" required>
+											<mat-option disabled selected> -- sconto rivenditore -- </mat-option>
+											<mat-option *ngFor="let matrix of (matrices[shopOrClient.discount_id] | async)" [value]="matrix">
+												Sconto: {{ matrix.discount }} % &nbsp;&nbsp; -> &nbsp;&nbsp; Provvigione {{ matrix.agent_fee }} %
+											</mat-option>
+										</mat-select>
+									</mat-form-field>
+								</div> -->
+							</div>
+							<div *ngIf="user.role == 'shop'">
+
+							</div>
+							<label>IVA (%) : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;</label>
+							<input style="display: inline" min="0" type="number" [(ngModel)]="preventive.iva" class="text-center form-control col-md-3" />
+							<br />
+							<label>Spedizione (€): &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+								<input
+									[attr.disabled]="user.role == 'manager' ? 'disabled' : null"
+									style="display: inline"
+									type="number" min="0"
+									[(ngModel)]="preventive.shipping"
+									class="text-center form-control col-md-3"
+								/>
+							<div *ngIf="user.role == 'admin' || user.role == 'shop' || user.role == 'manager'">
+								<label>IVA Spedizione (%) : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+							<input style="display: inline" min="0" type="number" [(ngModel)]="preventive.iva_shipping" class="text-center form-control col-md-3" />
+							<br />
+							</div>
+							<span *ngIf="user.role == 'shop'">
+								<label>Posa in opera (€): &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label><input
+								style="display: inline" min="0" type="number" [(ngModel)]="preventive.service_on_home"
+								class="text-center form-control col-md-3" />
+								<label>Iva posa in opera (%): &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label><input
+								style="display: inline" min="0" type="number" [(ngModel)]="preventive.iva_home_service"
+								class="text-center form-control col-md-3" />
+							</span>
+							<!-- <span *ngIf="user.role == 'shop'">
+								<br />
+								<label>Ricarico (%): &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label><input
+								style="display: inline" min="0" max="100" (change)="!(preventive.markup > 0 && preventive.markup < 100) ? preventive.markup = 0 : ''" type="number" [(ngModel)]="preventive.markup"
+								class="text-center form-control col-md-3" />
+							</span> -->
+
+							<span *ngIf="user.role == 'shop'">
+								<br />
+								<label>Ricarico (%): &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label><input
+								style="display: inline" min="0" max="100" (change)="preventive.markup" type="number" [(ngModel)]="preventive.markup"
+								class="text-center form-control col-md-3" />
+							</span>
+								<br />
+								<br />
+							<span>
+								<label>Riferimento:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+								<input style="display: inline" type="text" (change)="preventive.reference" [(ngModel)]="preventive.reference" class="form-control col-md-6" />
+							</span>
+							<br />
+							<br />
+							<div *ngIf="user.role != 'shop';else calculateShop">
+								<label>Totale del preventivo :
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								</label>
+								<label class="p-4" style="border: 1px solid black;">{{((preventive.amount * (1 - preventive.discount / 100) * (1 + preventive.iva / 100) + preventive.shipping * (1 + preventive.iva_shipping  / 100)) | number : '1.0-2')}}€</label>
+							</div>
+
+							<ng-template #calculateShop>
+								<label>Totale del preventivo :
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								</label>
+									<label class="p-4" style="border: 1px solid black;">
+										{{
+											((preventive.amount * (1 + preventive.markup / 100) * (1 - preventive.discount / 100) * (1 + preventive.iva / 100)
+											+ preventive.shipping * (1 + preventive.iva_shipping / 100) + preventive.service_on_home * (1 + preventive.iva_home_service / 100))
+											| number : '1.0-2')
+										}}€
+									</label>
+							</ng-template>
+						</div>
+					</div>
+				</div>
+				<div class="row text-right">
+					<div class="col-md-12">
+						<br />
+						<br />
+						<button type="button" (click)="submitPreventive()" class="btn btn-primary btn-sm">Procedi</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

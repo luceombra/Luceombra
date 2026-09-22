@@ -1,0 +1,62 @@
+<div class="logo">
+    <a href="/#/admin/dashboard" class="simple-text">
+        <div class="logo-img">
+            <img src="/assets/img/angular2-logo-red.png" />
+        </div>
+        Tende Project
+    </a>
+</div>
+<div class="sidebar-wrapper" style="overflow: scroll">
+    <div *ngIf="isMobileMenu()">
+        <form class="navbar-form">
+            <span class="bmd-form-group">
+                <div class="input-group no-border">
+                    <input type="text" value="" class="form-control" placeholder="Search...">
+                    <button mat-raised-button type="submit" class="btn btn-white btn-round btn-just-icon">
+                        <i class="material-icons">search</i>
+                        <div class="ripple-container"></div>
+                    </button>
+                </div>
+            </span>
+        </form>
+        <ul class="nav navbar-nav nav-mobile-menu">
+            <li class="nav-item">
+                <a class="nav-link">
+                    <i class="material-icons">dashboard</i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLink="/admin/profile">
+                    <i class="material-icons">person</i>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <ul class="nav" style="overflow: auto">
+        <div *ngFor="let menuItem of menuItems">
+            <li routerLinkActive="active" class="{{ menuItem.class }} nav-item">
+                <a class="nav-link" [routerLink]="[menuItem.path]">
+                    <i class="material-icons">{{ menuItem.icon }}</i>
+                    <p>{{ menuItem.title }}</p>
+                </a>
+            </li>
+        </div>
+        <li class="nav-item" *ngIf="subMenus.length > 0">
+            <a href="#" class="nav-link" data-toggle="dropdown">
+                <i class="fa fa-cube" aria-hidden="true">
+                </i><p>Accessori</p></a>
+                <ul class="dropdown-menu multi-column">
+                    <li>
+                        <ul class="multi-column-dropdown nav">
+                            <li routerLinkActive="active" *ngFor="let menuItem of subMenus" class="{{menuItem.class}} nav-item">
+                                <a class="nav-link" [routerLink]="[menuItem.path]">
+                                    <i class="material-icons">{{ menuItem.icon }}</i>
+                                    <p>{{ menuItem.title }}</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+    </ul>
+</div>

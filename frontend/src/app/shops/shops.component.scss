@@ -1,0 +1,24 @@
+.mat-header-cell, .mat-cell {
+  padding: 0.75rem !important;
+  min-width: 160px;
+}
+
+.mat-table-sticky:first-child {
+  border-right: 1px solid #e0e0e0;
+}
+
+td.mat-column-index, th.mat-column-index, td.mat-column-image, th.mat-column-image {
+  min-width: 50px;
+}
+
+.mat-table-sticky:last-child {
+  border-left: 1px solid #e0e0e0;
+}
+
+.table-container{
+  overflow-x: auto;
+}
+
+.mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-thumb {
+    background-color: #49c5b6;
+}

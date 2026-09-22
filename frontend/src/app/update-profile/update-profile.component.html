@@ -1,0 +1,123 @@
+<div class="card col-md-12">
+    <div class="card-body" style="height: 400px;overflow: auto;">
+        <form [formGroup]="updateProfile">
+            <div class="form-group">
+                <label for="fullName">Nome e Cognome</label>
+                <input type="text" formControlName="fullName" class="form-control" />
+                <div *ngIf="submitted && f.fullName.errors" class="alert alert-danger">
+                    <div *ngIf="f.fullName.errors.required">Nome e Cognome sono obbligatorio</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="text" formControlName="email" class="form-control" />
+                <div *ngIf="submitted && f.email.errors" class="alert alert-danger">
+                    <div *ngIf="f.email.errors.required">Email è obbligatorio</div>
+                    <div *ngIf="f.email.errors.email">Il formato dell'email non è corretto</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="image">Immagine</label>
+                <br />
+                <button (click)="fileInput.click()">
+                    <mat-icon>library_add</mat-icon>
+                    <span>Scegliere</span>
+                    <input #fileInput (change)="processFile(fileInput)" type="file" formControlName="image"
+                    accept=".jpg,.png,.jpeg,.gif" style="display:none;" />
+                </button>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Telefono</label>
+                <input type="text" formControlName="phone" class="form-control" />
+            </div>
+
+            <div *ngIf="user.role == 'admin' && user.superAdmin" class="form-group">
+                <div class="form-group">
+                    <label for="phone">Indirizzo</label>
+                    <input type="text" formControlName="address" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label for="phone">Sito Web</label>
+                   <input type="text" formControlName="website" class="form-control" />
+                </div>
+            </div>
+            <div *ngIf="user.role == 'admin' || user.role == 'shop'">
+                <label for="iva">IVA (%)</label>
+                <input type="number" min="0" formControlName="iva" class="form-control" />
+                <div *ngIf="submitted && f.iva.errors" class="alert alert-danger">
+                    <div *ngIf="f.iva.errors.required">IVA è obbligatorio</div>
+                </div>
+            </div>
+            <div *ngIf="user.role == 'admin' && user.superAdmin || user.role == 'shop'">
+                <!-- <div class="form-group"> -->
+                    <label for="iva">IVA Spedizione (%)</label>
+                    <input type="number" min="0" formControlName="iva_shipping" class="form-control" />
+                <!-- </div> -->
+                <div *ngIf="submitted && f.iva.errors" class="alert alert-danger">
+                    <div *ngIf="f.iva_shipping.errors.required">IVA Spedizione è obbligatorio</div>
+                </div>
+            </div>
+            <div *ngIf="user.role == 'shop'">
+                <div class="form-group">
+                    <label for="iva">IVA Posa In Opera (%)</label>
+                    <input type="number" min="0" formControlName="iva_home_service" class="form-control" />
+                </div>
+                <div *ngIf="submitted && f.iva_home_service.errors" class="alert alert-danger">
+                    <div *ngIf="f.iva_home_service.errors.required">IVA Posa In Opera è obbligatorio</div>
+                </div>
+            </div>
+            <div *ngIf="user.role == 'manager'" class="form-group">
+                <label for="zone_covered">Zona Coperta</label>
+                <input type="text" formControlName="zone_covered" class="form-control" />
+            </div>
+
+            <!-- <div *ngIf="user.role == 'shop'" class="form-group">
+                <label for="markup">Markup (%)</label>
+                <input type="number" min="0" formControlName="markup" class="form-control" />
+                <div *ngIf="submitted && f.markup.errors" class="alert alert-danger">
+                    <div *ngIf="f.markup.errors.required">Markup è obbligatorio</div>
+                </div>
+            </div> -->
+
+            <div *ngIf="user.role == 'shop' || (user.role == 'admin' && user.superAdmin)" class="form-group">
+                <label for="piva">P.IVA</label>
+                <input type="text" formControlName="piva" class="form-control" />
+                <div *ngIf="submitted &&  (this.isShop || (user.role == 'admin' && user.superAdmin)) && (this.updateProfile.value.piva == '')" class="alert alert-danger">
+                    <div>P.IVA è obbligatorio</div>
+                </div>
+            </div>
+
+            <div *ngIf="user.role == 'shop'" class="form-group">
+                <label for="address">Indirizzo</label>
+                <input type="text" formControlName="address" class="form-control" />
+            </div>
+
+            <div *ngIf="user.role == 'shop' || (user.role == 'admin' && user.superAdmin)" class="form-group">
+                <label for="pdfFooter">Acquista dati (piè di pagina di il pdf)</label>
+                <editor formControlName="pdfFooter" apiKey="b10in7zi3c434kx38qnbevz81rols6q0uev5jh2jeubt6yyu" [init]="tinyMceSettings"></editor>
+
+               <div class="mt-4">
+                    <label for="confirmation_order_note">Conferma d'ordine note</label>
+                    <editor
+                        formControlName="confirmation_order_note"
+                        apiKey="b10in7zi3c434kx38qnbevz81rols6q0uev5jh2jeubt6yyu"
+                        [init]="tinyMceSettings"
+                    >
+                    </editor>
+               </div>
+            </div>
+            <br />
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group text-right">
+            <button type="button" class="mat-raised-button" (click)="close()">Chiudi</button>
+            &nbsp;
+            <button type="button" (click)="onSubmit()" class="btn btn-primary">Aggiorna Profilo</button>
+        </div>
+    </div>
+</div>
